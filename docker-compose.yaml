@@ -1,0 +1,49 @@
+version: "3"
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: "rabbitmq"
+    environment:
+      RABBITMQ_DEFAULT_VHOST: "smarthome"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - smart
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:15672"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    labels:
+      NAME: "rabbitmq"
+  log:
+    environment:
+        RABBIT_HOST: "rabbitmq"
+    image: "smarthome/server"
+    hostname: "log-server"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links: 
+      - rabbitmq
+    networks:
+      - smart
+  thermometer:
+    environment:
+        RABBIT_HOST: "rabbitmq"
+    image: "smarthome/thermometer"
+    hostname: "thermometer"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links: 
+      - rabbitmq
+    networks:
+      - smart
+networks:
+  smart:
+    driver: bridge
+
