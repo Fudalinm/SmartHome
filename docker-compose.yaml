@@ -43,6 +43,90 @@ services:
       - rabbitmq
     networks:
       - smart
+  controller:
+    environment:
+      RABBIT_HOST: "rabbitmq"
+    image: "smarthome/controller"
+    hostname: "controller"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    networks:
+      - smart
+  alarm:
+    environment:
+      RABBIT_HOST: "rabbitmq"
+    image: "smarthome/alarm"
+    hostname: "alarm"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    networks:
+      - smart
+  env_simulator:
+    environment:
+      RABBIT_HOST: "rabbitmq"
+    image: "smarthome/env_simulator"
+    hostname: "env_simulator"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    networks:
+      - smart
+  light_sensor:
+    environment:
+      RABBIT_HOST: "rabbitmq"
+    image: "smarthome/server"
+    hostname: "light-sensor"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    networks:
+      - smart
+  move_sensor:
+    environment:
+      RABBIT_HOST: "rabbitmq"
+    image: "smarthome/server"
+    hostname: "move-sensor"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    networks:
+      - smart
+  blinds:
+    environment:
+      RABBIT_HOST: "rabbitmq"
+    image: "smarthome/blinds"
+    hostname: "blinds"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    networks:
+      - smart
+  lights:
+    environment:
+      RABBIT_HOST: "rabbitmq"
+    image: "smarthome/lights"
+    hostname: "lights"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    networks:
+      - smart
 networks:
   smart:
     driver: bridge
