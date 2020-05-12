@@ -25,7 +25,8 @@ public class Receiver{
     public Receiver(
             Connection connection,
             String exchange,
-            String listenTopic
+            String listenTopic,
+            RabbitCallback rabbitCallback
     ) throws IOException {
         this.exchange = exchange;
         this.listenTopic = listenTopic;
@@ -37,7 +38,7 @@ public class Receiver{
 
         channel.queueBind(queueName, exchange, listenTopic);
 
-        channel.basicConsume(queueName, true, this::deliverCallback, consumerTag -> { });
+        channel.basicConsume(queueName, true, rabbitCallback::receiverFunction, consumerTag -> { });
     }
 
 
