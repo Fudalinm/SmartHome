@@ -1,8 +1,6 @@
 package agh.edu.pl.smarthome;
-
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -10,6 +8,7 @@ public class Thermometer {
 
     private Thread sender;
     private Receiver receiver;
+    private Sensor sensor;
 
     public Thermometer(
             String host,
@@ -28,9 +27,10 @@ public class Thermometer {
         Connection connection = factory.newConnection();
         Connection connection2 = factory.newConnection();
 
-        this.sender = new Thread(new Sender(connection, exchange, publishTopic));
+        this.sensor = new Sensor();
+        this.sender = new Thread(new Sender(connection, exchange, publishTopic,sensor));
         this.sender.start();
-        this.receiver = new Receiver(connection2, exchange, listenTopic);
+        this.receiver = new Receiver(connection2, exchange, listenTopic,sensor);
     }
 
     public static void main(String[] argv) throws Exception {

@@ -127,6 +127,18 @@ services:
       - rabbitmq
     networks:
       - smart
+  radiator:
+    environment:
+      RABBIT_HOST: "rabbitmq"
+    image: "smarthome/radiator"
+    hostname: "radiator"
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    networks:
+      - smart
 networks:
   smart:
     driver: bridge

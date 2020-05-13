@@ -25,4 +25,6 @@ cd ../..
 cd components/lights
 bash build_image.sh
 cd ../..
-
+cd components/radiator
+bash build_image.sh
+cd ../..
