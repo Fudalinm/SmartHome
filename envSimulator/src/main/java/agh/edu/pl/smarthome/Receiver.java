@@ -1,32 +1,22 @@
 package agh.edu.pl.smarthome;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Delivery;
-
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 
-public class Receiver{
+public class Receiver implements Runnable{
 
     private Connection connection;
     private Channel channel;
     private String exchange;
     private String listenTopic;
     private String queueName;
-
-    public void deliverCallback(String consumerTag, Delivery delivery) throws UnsupportedEncodingException {
-        System.out.println(consumerTag);
-        String message = new String(delivery.getBody(), "UTF-8");
-        System.out.println(" [x] Received '" +
-                delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
-    }
+    private RabbitCallback rabbitCallback;
 
     public Receiver(
             Connection connection,
             String exchange,
-            String listenTopic,
-            RabbitCallback rabbitCallback
+            String listenTopic
     ) throws IOException {
         this.exchange = exchange;
         this.listenTopic = listenTopic;
@@ -38,7 +28,19 @@ public class Receiver{
 
         channel.queueBind(queueName, exchange, listenTopic);
 
-        channel.basicConsume(queueName, true, rabbitCallback::receiverFunction, consumerTag -> { });
+    }
+    
+    public void setCallback(RabbitCallback rc){
+        this.rabbitCallback = rc;
+    }
+    
+    public void run(){
+        try {
+            channel.basicConsume(queueName, true, this.rabbitCallback::receiverFunction, consumerTag -> {});
+        } catch (IOException e){
+            System.out.println("Couldn't consume messages");
+            e.printStackTrace();
+        }
     }
 
 

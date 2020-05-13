@@ -1,7 +1,5 @@
 package agh.edu.pl.smarthome;
 import com.rabbitmq.client.ConnectionFactory;
-
-import javax.xml.ws.Service;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
@@ -19,7 +17,7 @@ public class EnvironmentSimulator {
         this.homeServices = services;
 
         for(HomeService s: homeServices){
-            s.setConnection(factory.newConnection());
+            s.setConnection(factory.newConnection(),factory.newConnection());
             s.setExchange(exchange);
         }
 
