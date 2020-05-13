@@ -15,7 +15,9 @@ public class EnvironmentSimulator {
         factory.setVirtualHost(vhost);
 
         this.homeServices = services;
-
+        
+        System.out.println("Connecting services\n");
+        
         for(HomeService s: homeServices){
             s.setConnection(factory.newConnection(),factory.newConnection());
             s.setExchange(exchange);
@@ -28,7 +30,14 @@ public class EnvironmentSimulator {
         String password = EnvironmentSimulator.getEnvOrDefault("RABBIT_PASSWORD", "rabbitmq");
         String username = EnvironmentSimulator.getEnvOrDefault("RABBIT_USERNAME", "rabbitmq");
         String vhost = EnvironmentSimulator.getEnvOrDefault("RABBIT_VHOST", "smarthome");
+        
         String exchange = EnvironmentSimulator.getEnvOrDefault("SMARTHOME_EXCHANGE", "smarthome");
+
+        System.out.println("Host: " + host);
+        System.out.println("password: " + password);
+        System.out.println("username: " + username);
+        System.out.println("vhost: " + vhost);
+        System.out.println("exchange: " + exchange);
 
 
         /* Defining services with callbacks */
@@ -52,6 +61,16 @@ public class EnvironmentSimulator {
         /* Running simulator */
         simulator.runSimulator();
 
+        while (true){
+            try{
+                Thread.sleep(2000);
+                System.out.println("Still alive");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
 
@@ -70,13 +89,6 @@ public class EnvironmentSimulator {
             Thread t = new Thread(service);
             t.start();
             homeServicesThread.add(t);
-        }
-        for (Thread t: homeServicesThread){
-            try {
-                t.join();
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }
         }
     }
 

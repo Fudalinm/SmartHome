@@ -2,7 +2,6 @@ package agh.edu.pl.smarthome;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.rabbitmq.client.Delivery;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -27,7 +26,6 @@ public class TemperatureService extends HomeService {
             int radiatorUsage = receivedJson.get("RadiatorUsage").getAsInt();
             this.temperatureState.setRadiatorUsage(radiatorUsage);
             try {
-                
                 this.sender.send(this.temperatureState.createJsonToSend().toString());
             }catch (IOException e){
                 e.printStackTrace();
@@ -73,13 +71,17 @@ public class TemperatureService extends HomeService {
     public void run(){
         /* Implementation of this service functionality */
             /* Creating temperature state */
+        System.out.println("Set starting configuration");
         this.temperatureState = new TemperatureState();
             /* Creating sender && receiver */
+        System.out.println("Create sender and receiver");
         this.createSenderAndReceiver();
             /* Setting receiver callback */
+        System.out.println("Setting callback for receiver");
         this.rabbitCallback = new TemperatureRabbitCallback(this.sender,this.temperatureState);
         this.receiver.setCallback(this.rabbitCallback);
             /* Running receiver */
+        System.out.println("Start receiving thread");
         Thread receiverThread = new Thread(this.receiver);
         receiverThread.start();
         
@@ -87,6 +89,7 @@ public class TemperatureService extends HomeService {
         while(true){
             try {
                 Thread.sleep(5000);
+                System.out.println(this.temperatureState.createJsonToSend().toString());
                 this.temperatureState.updateExternalTemperature();
                 this.sender.send(this.temperatureState.createJsonToSend().toString());
             }catch (InterruptedException e){
