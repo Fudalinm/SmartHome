@@ -70,7 +70,11 @@ def radiator_control_callback(ch, method, properties, body):
 
 
 def radiator_info_callback(ch, method, properties, body):
+    print("My callback info body: " + str(body), flush=True)
+    # print(str(body))
     json_received = json.loads(body)
+    print("Info received: " + str(json_received), flush=True)
+    print("Setting internal temperature to: " + str(json_received["InternalTemperature"]), flush=True)
     radiator.set_current_temperature(json_received["InternalTemperature"])
 
 
@@ -86,38 +90,43 @@ def start_receiver(r, topic, fun):
         try:
             connection = pika.BlockingConnection(r.connection_parameters)
             channel = connection.channel()
-
             print("Receiver connection Established for " + str(topic))
-
-            channel.exchange_declare(exchange=r.exchange, exchange_type='topic')
-            result = channel.queue_declare('',durable=True)
-            queue_name = result.method.queue
-            channel.queue_bind(exchange=exchange, queue=queue_name, routing_key=topic)
-
-            channel.basic_consume(queue=queue_name, on_message_callback=fun, auto_ack=True)
+            break
         except :
             time.sleep(2)
             continue
+    channel.exchange_declare(exchange=r.exchange, exchange_type='topic')
+    result = channel.queue_declare('', exclusive=True, durable=True)
+    queue_name = result.method.queue
+    channel.queue_bind(exchange=exchange, queue=queue_name, routing_key=topic)
+
+    channel.basic_consume(queue=queue_name, on_message_callback=fun, auto_ack=True)
+    channel.start_consuming()
+
+    while True:
+        time.sleep(2)
+        print("Receiver Topic: " + str(topic) + " alive ",flush=True)
+
 
 def start_sender(r, topic):
     while True:
         try:
             connection = pika.BlockingConnection(r.connection_parameters)
             channel = connection.channel()
-
             print("Sender connection Established for " + str(topic))
-
-            while True:
-                r.update_radiator_usage()
-                to_send = str(prepare_json_to_send())
-                channel.basic_publish(exchange=r.exchange, routing_key=topic, body=to_send)
-                print("Radiator sending: " + to_send)
-                time.sleep(4)
-        except Exception as e:
-            print(e)
-            # This sleep doesnt work? dunno why...
+            break
+        except:
             time.sleep(2)
             continue
+
+    while True:
+        r.update_radiator_usage()
+        to_send = str(prepare_json_to_send())
+        channel.basic_publish(exchange=r.exchange, routing_key=topic, body=to_send)
+        print("S: Radiator sending: " + str(to_send), flush=True)
+        print("S: Temperature current: " + str(r.room_temperature) ,flush=True)
+        time.sleep(4)
+
 
 
 

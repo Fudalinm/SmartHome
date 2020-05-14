@@ -26,7 +26,7 @@ public class Sensor {
     }
 
     public double updateInternalTemperature(){
-        this.internalTemperature = this.internalTemperature + (this.externalTemperature - this.internalTemperature)/20 + (int)((radiatorUsage/100.0)*60)/8;
+        this.internalTemperature = this.internalTemperature + (this.externalTemperature - this.internalTemperature)/20 + (int)(radiatorUsage*60)/8;
         return this.internalTemperature/100.0;
     }
 

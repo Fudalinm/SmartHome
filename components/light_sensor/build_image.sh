@@ -1,1 +1,1 @@
-docker build -t smarthome/components/light_sensor .
+docker build -t smarthome/light_sensor .

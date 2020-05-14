@@ -1,1 +1,1 @@
-docker build -t smarthome/components/move_sensor .
+docker build -t smarthome/move_sensor .
