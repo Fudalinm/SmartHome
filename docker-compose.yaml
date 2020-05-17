@@ -82,8 +82,8 @@ services:
   light_sensor:
     environment:
       RABBIT_HOST: "rabbitmq"
-    image: "smarthome/server"
-    hostname: "light-sensor"
+    image: "smarthome/light_sensor"
+    hostname: "light_sensor"
     restart: on-failure
     depends_on:
       - rabbitmq
@@ -94,8 +94,8 @@ services:
   move_sensor:
     environment:
       RABBIT_HOST: "rabbitmq"
-    image: "smarthome/server"
-    hostname: "move-sensor"
+    image: "smarthome/move_sensor"
+    hostname: "move_sensor"
     restart: on-failure
     depends_on:
       - rabbitmq

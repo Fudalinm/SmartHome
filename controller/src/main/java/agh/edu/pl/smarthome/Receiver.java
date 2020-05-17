@@ -3,11 +3,10 @@ package agh.edu.pl.smarthome;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Delivery;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-
+/* Left for now but it won't be probably needed */
 public class Receiver{
 
     private Connection connection;

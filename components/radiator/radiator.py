@@ -61,12 +61,16 @@ radiator = Radiator(host, password, username, vhost, exchange)
 
 def radiator_control_callback(ch, method, properties, body):
     json_received = json.loads(body)
-    if json_received['ControlType'] != "automatic":
+    if 'ControlType' in json_received.keys() and json_received['ControlType'] != "automatic":
         radiator.f_automatic_control = False
         print('Setting radiator usage')
         radiator.radiator_usage = int(json_received['Usage'])
     else:
         radiator.f_automatic_control = True
+
+    if 'TargetTemperature' in json_received.keys():
+        print('Setting radiator usage')
+        radiator.target_temperature = double(json_received['TargetTemperature'])
 
 
 def radiator_info_callback(ch, method, properties, body):
