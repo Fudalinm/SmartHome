@@ -1,4 +1,5 @@
-FROM python:latest
-ADD light_sensor.py /
-RUN pip3 install pika
-CMD [ "python", "./light_sensor.py" ]
+FROM java:8
+WORKDIR /
+ADD light_sensor-all-1.0.jar light_sensor-all-1.0.jar
+CMD java -jar light_sensor-all-1.0.jar
+

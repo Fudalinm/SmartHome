@@ -42,14 +42,14 @@ public class EnvironmentSimulator {
 
         /* Defining services with callbacks */
         List<HomeService> homeServices = new LinkedList<HomeService>();
+        
         HomeService temperatureService = new TemperatureService("TEMPERATURE_ROOM_1","room1.temperature.env");
         homeServices.add(temperatureService);
 
-        /*
-        HomeService lightService = new HomeService("room1.light.env"); //TODO: change to lightService
-        lightService.setFunctionCallbacks();
+        HomeService lightService = new LightService("LIGHT_ROOM_1","room1.light.env");
         homeServices.add(lightService);
 
+        /*
         HomeService moveService = new HomeService("room1.move.env");
         moveService.setFunctionCallbacks();
         homeServices.add(moveService);

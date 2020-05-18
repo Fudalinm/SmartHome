@@ -34,7 +34,7 @@ public class Controller{
 
     }
 
-    private void controlLoop() throws IOException {
+    private void controlLoop() throws IOException, InterruptedException{
         while(true){
             System.out.println("Chose device: \n");
             for(int i=0;i<deviceControllers.size();i++){
@@ -46,6 +46,8 @@ public class Controller{
                 deviceNumber = Integer.parseInt(reader.readLine());
             }catch (NumberFormatException e){
                 System.out.println("Wrong format. Try again");
+                //For now because input badly held
+                Thread.sleep(60*1000);
                 continue;
             }
             if(deviceNumber < 0 || deviceNumber > deviceControllers.size() - 1){

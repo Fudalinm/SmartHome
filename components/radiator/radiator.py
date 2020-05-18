@@ -70,7 +70,7 @@ def radiator_control_callback(ch, method, properties, body):
 
     if 'TargetTemperature' in json_received.keys():
         print('Setting radiator usage')
-        radiator.target_temperature = double(json_received['TargetTemperature'])
+        radiator.target_temperature = float(json_received['TargetTemperature'])
 
 
 def radiator_info_callback(ch, method, properties, body):
