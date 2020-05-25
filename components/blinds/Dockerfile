@@ -1,4 +1,5 @@
 FROM python:latest
 ADD blinds.py /
 RUN pip3 install pika
-CMD [ "python", "./blinds.py" ]
+ADD wait-for.sh /
+RUN apt-get -q update && apt-get -qy install netcat

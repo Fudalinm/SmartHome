@@ -27,10 +27,13 @@ services:
     restart: on-failure
     depends_on:
       - rabbitmq
-    links: 
+    links:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "python", "server.py"]
+    volumes:
+      - ./logs:/logs
   thermometer:
     environment:
         RABBIT_HOST: "rabbitmq"
@@ -39,10 +42,11 @@ services:
     restart: on-failure
     depends_on:
       - rabbitmq
-    links: 
+    links:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "java", "-jar", "termometer-all-1.0.jar"]
   controller:
     environment:
       RABBIT_HOST: "rabbitmq"
@@ -55,6 +59,7 @@ services:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "java", "-jar", "controller-all-1.0.jar"]
   alarm:
     environment:
       RABBIT_HOST: "rabbitmq"
@@ -67,6 +72,7 @@ services:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "java", "-jar", "alarm-all-1.0.jar"]
   env_simulator:
     environment:
       RABBIT_HOST: "rabbitmq"
@@ -79,6 +85,7 @@ services:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "java", "-jar", "light_sensor-all-1.0.jar"]
   light_sensor:
     environment:
       RABBIT_HOST: "rabbitmq"
@@ -91,6 +98,7 @@ services:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "java", "-jar", "envSimulator-all-1.0.jar"]
   move_sensor:
     environment:
       RABBIT_HOST: "rabbitmq"
@@ -103,6 +111,7 @@ services:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "python", "move_sensor.py"]
   blinds:
     environment:
       RABBIT_HOST: "rabbitmq"
@@ -115,6 +124,7 @@ services:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "python", "blinds.py"]
   lights:
     environment:
       RABBIT_HOST: "rabbitmq"
@@ -127,6 +137,7 @@ services:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "java", "-jar", "lights-all-1.0.jar"]
   radiator:
     environment:
       RABBIT_HOST: "rabbitmq"
@@ -139,7 +150,7 @@ services:
       - rabbitmq
     networks:
       - smart
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "python", "radiator.py"]
 networks:
   smart:
     driver: bridge
-

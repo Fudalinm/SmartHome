@@ -13,6 +13,7 @@ host = getEnvOrDefault("RABBIT_HOST", "localhost")
 password = getEnvOrDefault("RABBIT_PASSWORD", "rabbitmq")
 username = getEnvOrDefault("RABBIT_USERNAME", "rabbitmq")
 vhost = getEnvOrDefault("RABBIT_VHOST", "smarthome")
+f = open("logs/log.txt", "a")
 
 print(host)
 print(password)
@@ -33,8 +34,8 @@ queue_name = result.method.queue
 channel.queue_bind(exchange=exchange, queue=queue_name, routing_key="#")
 
 def callback(ch, method, properties, body):
-    print(" RK: " + str(method.routing_key) +  " [x] Received %r" % body, flush=True)
-
+    f.write(" RK: " + str(method.routing_key) +  " [x] Received %r \n" % body)
+    f.flush()
 
 channel.basic_consume(
     queue=queue_name, on_message_callback=callback, auto_ack=True)
