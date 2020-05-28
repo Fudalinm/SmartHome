@@ -15,9 +15,9 @@ public class EnvironmentSimulator {
         factory.setVirtualHost(vhost);
 
         this.homeServices = services;
-        
+
         System.out.println("Connecting services\n");
-        
+
         for(HomeService s: homeServices){
             s.setConnection(factory.newConnection(),factory.newConnection());
             s.setExchange(exchange);
@@ -30,7 +30,7 @@ public class EnvironmentSimulator {
         String password = EnvironmentSimulator.getEnvOrDefault("RABBIT_PASSWORD", "rabbitmq");
         String username = EnvironmentSimulator.getEnvOrDefault("RABBIT_USERNAME", "rabbitmq");
         String vhost = EnvironmentSimulator.getEnvOrDefault("RABBIT_VHOST", "smarthome");
-        
+
         String exchange = EnvironmentSimulator.getEnvOrDefault("SMARTHOME_EXCHANGE", "smarthome");
 
         System.out.println("Host: " + host);
@@ -42,18 +42,16 @@ public class EnvironmentSimulator {
 
         /* Defining services with callbacks */
         List<HomeService> homeServices = new LinkedList<HomeService>();
-        
+
         HomeService temperatureService = new TemperatureService("TEMPERATURE_ROOM_1","room1.temperature.env");
         homeServices.add(temperatureService);
 
         HomeService lightService = new LightService("LIGHT_ROOM_1","room1.light.env");
         homeServices.add(lightService);
 
-        /*
-        HomeService moveService = new HomeService("room1.move.env");
-        moveService.setFunctionCallbacks();
+
+        HomeService moveService = new MoveService("MOVE_1", "room1.move.env");
         homeServices.add(moveService);
-        */
 
         /* Creating main class */
         EnvironmentSimulator simulator = new EnvironmentSimulator(host,password,username,vhost,exchange,homeServices);

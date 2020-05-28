@@ -11,10 +11,10 @@ import java.util.concurrent.TimeoutException;
 
 public class Controller{
     private List<DeviceController> deviceControllers;
-    
+
     public static void main(String[] argv) throws Exception {
         /* Get envs */
-        String host = Controller.getEnvOrDefault("RABBIT_HOST", "localhost");
+        String host = Controller.getEnvOrDefault("RABBIT_HOST", "rabbitmq");
         String password = Controller.getEnvOrDefault("RABBIT_PASSWORD", "rabbitmq");
         String username = Controller.getEnvOrDefault("RABBIT_USERNAME", "rabbitmq");
         String vhost = Controller.getEnvOrDefault("RABBIT_VHOST", "smarthome");
@@ -26,10 +26,10 @@ public class Controller{
         System.out.println("username: " + username);
         System.out.println("vhost: " + vhost);
         System.out.println("exchange: " + exchange);
-        
+
         /* Init Controller */
         Controller controller = new Controller(host,password,username,vhost,exchange);
-        
+
         controller.controlLoop();
 
     }
@@ -77,7 +77,7 @@ public class Controller{
         BlindsController blindsController = new BlindsController("blindsController1",factory.newConnection(),exchange,Controller.getEnvOrDefault("BLINDS_ROOM1_CONTROL", "room1.blinds.control"));
         LightsController lightsController = new LightsController("lightsController1",factory.newConnection(),exchange,Controller.getEnvOrDefault("LIGHTS_ROOM1_CONTROL", "room1.lights.control"));
         RadiatorController radiatorController = new RadiatorController("RadiatorController1",factory.newConnection(),exchange,Controller.getEnvOrDefault("RADIATOR_ROOM1_CONTROL", "room1.temperature.control"));
-        
+
         this.deviceControllers = new LinkedList<>();
         deviceControllers.add(alarmController);
         deviceControllers.add(blindsController);
@@ -93,5 +93,5 @@ public class Controller{
             return def;
         }
     }
-    
+
 }

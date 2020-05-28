@@ -34,6 +34,7 @@ queue_name = result.method.queue
 channel.queue_bind(exchange=exchange, queue=queue_name, routing_key="#")
 
 def callback(ch, method, properties, body):
+    print(" RK: " + str(method.routing_key) +  " [x] Received %r" % body, flush=True)
     f.write(" RK: " + str(method.routing_key) +  " [x] Received %r \n" % body)
     f.flush()
 
