@@ -19,16 +19,18 @@ public class LightsController extends DeviceController{
         JsonObject toRet = new JsonObject();
         try {
             String input = reader.readLine();
-            String[] controlStrings = input.split(";",2);
+            String[] controlStrings = input.split(";",3);
 
             Integer controlTypeInt = Integer.parseInt(controlStrings[0]);
             String controlTypeString = controlTypeInt == 1 ? "automatic" : controlTypeInt == 2 ?  "manual" : "";
-            Integer property = Integer.parseInt(controlStrings[1]);
+            Integer usage = Integer.parseInt(controlStrings[1]);
+            Double targetLight = Double.parseDouble(controlStrings[2]);
 
             if (controlTypeString.length() > 1){
                 toRet.addProperty("ControlType",controlTypeString);
             }
-            toRet.addProperty("Property", property);
+            toRet.addProperty("Usage",usage);
+            toRet.addProperty("TargetLight",targetLight);
         }catch (IOException e){
             System.out.println("Error while line processing");
             e.printStackTrace();
@@ -39,9 +41,9 @@ public class LightsController extends DeviceController{
 
     @Override
     public String help() {
-        return "Input string CONTROL_TYPE;LIGHT_BORDER_SWITCH_OR_ONN_OFF \n" +
+        return "Input string CONTROL_TYPE;LIGHT_PERCENTAGE;TARGET_LIGHT \n" +
                 "\t CONTROL_TYPE (0 - previous, 1 - automatic, 2 - manual)\n" +
-                "\t LIGHT_BORDER_SWITCH  automatic - integer between 0 and 7000 OR If manula 1 or 0 for on and off \n" +
-                "\t Example 2;0";
-    }
-}
+                "\t USAGE integer between 0 and 100 \n" +
+                "\t TARGET_LIGHT double\n" +
+                "\t Example 2;80;255.5";
+    }}

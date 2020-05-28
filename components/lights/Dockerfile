@@ -1,6 +1,5 @@
-FROM openjdk:8-jdk-stretch
-WORKDIR /
+FROM python:latest
+ADD lights.py /
+RUN pip3 install pika
 ADD wait-for.sh /
-RUN apt-get update && apt-get -y install netcat && apt-get clean
-ADD lights-all-1.0.jar lights-all-1.0.jar
-
+RUN apt-get -q update && apt-get -qy install netcat

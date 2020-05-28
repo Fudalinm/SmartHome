@@ -21,7 +21,7 @@ public class ReceiverControl implements Runnable{
 
     public void deliverCallback(String consumerTag, Delivery delivery) throws UnsupportedEncodingException {
         JsonObject receivedJson = new Gson().fromJson(new String(delivery.getBody(), "UTF-8"),JsonObject.class);
-        System.out.println(" Thermometer received: " +
+        System.out.println(" Alarm received: " +
                 delivery.getEnvelope().getRoutingKey() + "':'" + receivedJson.toString() + "'");
 
         int set = receivedJson.get("Set").getAsInt();

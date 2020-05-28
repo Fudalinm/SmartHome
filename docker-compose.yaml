@@ -137,7 +137,7 @@ services:
       - rabbitmq
     networks:
       - smart
-    command: ["./wait-for.sh", "rabbitmq:5672", "--", "java", "-jar", "lights-all-1.0.jar"]
+    command: ["./wait-for.sh", "rabbitmq:5672", "--", "python", "lights.py"]
   radiator:
     environment:
       RABBIT_HOST: "rabbitmq"

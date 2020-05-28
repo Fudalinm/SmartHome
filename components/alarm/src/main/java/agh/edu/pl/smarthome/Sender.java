@@ -4,9 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
-
 
 public class Sender implements Runnable {
 
@@ -57,7 +55,7 @@ public class Sender implements Runnable {
                         }
                         JsonObject toRet = new JsonObject();
                         toRet.addProperty("ControlType","manual");
-                        toRet.addProperty("Property", lastLightState ? 0 : 1);
+                        toRet.addProperty("Usage", lastLightState ? 0 : 100);
                         this.sendLights(toRet.toString());
                         previousIsUpState = true;
                     } else {

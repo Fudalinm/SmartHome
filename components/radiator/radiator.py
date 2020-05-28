@@ -43,11 +43,12 @@ class Radiator:
         self.room_temperature = new_temperature
 
     def update_radiator_usage(self):
-        self.radiator_usage = int(self.radiator_usage + (self.target_temperature - self.room_temperature) * 8)
-        if self.radiator_usage < 0:
-            self.radiator_usage = 0
-        elif self.radiator_usage > 100:
-            self.radiator_usage = 100
+        if self.f_automatic_control:
+            self.radiator_usage = int(self.radiator_usage + (self.target_temperature - self.room_temperature) * 8)
+            if self.radiator_usage < 0:
+                self.radiator_usage = 0
+            elif self.radiator_usage > 100:
+                self.radiator_usage = 100
 
 
 host = get_env_or_default("RABBIT_HOST", "localhost")
@@ -130,7 +131,6 @@ def start_sender(r, topic):
         print("S: Radiator sending: " + str(to_send), flush=True)
         print("S: Temperature current: " + str(r.room_temperature) ,flush=True)
         time.sleep(4)
-
 
 
 

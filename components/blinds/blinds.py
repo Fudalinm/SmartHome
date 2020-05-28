@@ -49,17 +49,18 @@ class Blinds:
         self.external_light = new_light
 
     def update_blinds_usage(self):
-        if self.external_light < 1000:
-            self.blinds_usage = 100
-        else:
-            if self.external_light > self.room_light and self.target_light > self.room_light:
-                self.blinds_usage -= 10
+        if self.f_automatic_control:
+            if self.external_light < 1000:
+                self.blinds_usage = 100
             else:
-                self.blinds_usage += 10
-        if self.blinds_usage < 0:
-            self.blinds_usage = 0
-        elif self.blinds_usage > 100:
-            self.blinds_usage = 100
+                if self.external_light > self.room_light and self.target_light > self.room_light:
+                    self.blinds_usage -= 10
+                else:
+                    self.blinds_usage += 10
+            if self.blinds_usage < 0:
+                self.blinds_usage = 0
+            elif self.blinds_usage > 100:
+                self.blinds_usage = 100
 
 
 host = get_env_or_default("RABBIT_HOST", "localhost")
@@ -96,10 +97,10 @@ def light_info_callback(ch, method, properties, body):
     blinds.set_current_external_light(json_received["ExternalLight"])
 
 
-def alarm_info_callback(ch, method, properties, body):
-    # TODO: implement me!
-    #  Shutting blinds if alarm on ?
-    pass
+# def alarm_info_callback(ch, method, properties, body):
+#     # TODO: implement me!
+#     #  Shutting blinds if alarm on ?
+#     pass
 
 
 def prepare_json_to_send():
@@ -154,7 +155,7 @@ def start_sender(r, topic):
 
 control_topic = get_env_or_default("BLINDS_ROOM1_CONTROL", "room1.blinds.control")
 info_topic = get_env_or_default("LIGHT_ROOM_1_INFO", "room1.light.info")
-alarm_topic = get_env_or_default("LIGHT_ROOM_1_ALARM", "room1.alarm.info")
+# alarm_topic = get_env_or_default("LIGHT_ROOM_1_ALARM", "room1.alarm.info")
 env_feedback_topic = get_env_or_default("LIGHT_ROOM_1_FEEDBACK", "room1.light.env_feedback")
 
 # Create receiver for cont
@@ -164,7 +165,7 @@ t1 = threading.Thread(target=start_receiver, args=(blinds, control_topic, blinds
 t2 = threading.Thread(target=start_receiver, args=(blinds, info_topic, light_info_callback))
 
 # Create receiver for info
-t3 = threading.Thread(target=start_receiver, args=(blinds, alarm_topic, alarm_info_callback))
+# t3 = threading.Thread(target=start_receiver, args=(blinds, alarm_topic, alarm_info_callback))
 
 #starting threads
 # threads are not sleeping in case of failure
